@@ -31,7 +31,7 @@ int keyIndex = 0;                 // your network key Index number (needed only 
 
 int status = WL_IDLE_STATUS;
 
-WiFiServer server(80);
+WiFiServer server(80); //Port
 
 
 
@@ -92,7 +92,7 @@ if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz 
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     status = WiFi.begin(ssid, pass);
 
-    // wait 10 seconds for connection:
+    // wait 7 seconds for connection:
     delay(7000);
   }
   server.begin();
@@ -107,7 +107,7 @@ void loop() {
 
   if (checkForBeat(irValue) == true)
   {
-    //We sensed a beat!
+    // beat detected!
     long delta = millis() - lastBeat;
     lastBeat = millis();
 
@@ -156,7 +156,7 @@ void loop() {
           if (currentLine.length() == 0) {
             // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
             // and a content-type so the client knows what's coming, then a blank line:
-            client.println(index_html);
+            client.println(index_html); //Serve the html plot page, has to be loaded to the microcontroller filesystem beforehand
 
             // break out of the while loop:
             break;
@@ -169,13 +169,11 @@ void loop() {
           currentLine += c;      // add it to the end of the currentLine
         }
 
-        // Check to see if the client request was "GET /H" or "GET /L":
+        // Check to see what the client asked for:
         if (currentLine.endsWith("GET /temperature")) {
         client.println(BPMvalue().c_str());
         }
-        if (currentLine.endsWith("GET /L")) {
-   
-        }
+        
       }
     }
     // close the connection:
